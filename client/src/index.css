@@ -1,0 +1,15 @@
+@import "~materialize-css/dist/css/materialize.min.css";
+
+body {
+    background: rgb(244,67,54);
+    background: linear-gradient(90deg, rgba(244,67,54,1) 0%, rgba(255,82,82,1) 100%);
+}
+
+input.red-input:focus {
+    border-bottom: 1px solid #F44336!important;
+    box-shadow: 0 1px 0 0 #F44336;
+}
+
+input.red-input:focus + label {
+    color: #F44336!important;
+}
