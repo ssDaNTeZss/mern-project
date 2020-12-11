@@ -1,10 +1,36 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from '../images/IMG_1737.jpg'
 import {Formik} from "formik";
 import * as yup from 'yup';
 import {NavLink} from "react-router-dom";
+import {useHttp} from "../hooks/http.hook";
+import {useMessage} from "../hooks/message.hook";
 
 export const RegPage = () => {
+    const message = useMessage();
+    const {loading, error, request, clearError} = useHttp();
+    const [form, setForm] = useState({
+        lastName: '',
+        firstName: '',
+        patronymic: '',
+        confirmPassword: '',
+        email: ''
+    });
+
+    useEffect( () => {
+        message(error);
+        clearError();
+    }, [error, message, clearError]);
+
+    const registrationHandler = async (values) => {
+        try {
+            const data = await request(
+                '/api/auth/registration',
+                'POST',
+                values);
+            message(data.message);
+        } catch (e) {}
+    };
 
     const validationsSchema = yup.object().shape({
         lastName: yup.string()
@@ -38,7 +64,9 @@ export const RegPage = () => {
                 }}
                 validateOnBlur
                 onSubmit={values => {
-                    console.log(values) }}
+                    console.log(values);
+                    registrationHandler(values);
+                }}
                 validationSchema={validationsSchema}
             >
                 {({values, errors, touched, handleChange, handleBlur, isValid, handleSubmit, dirty}) => (
@@ -127,7 +155,7 @@ export const RegPage = () => {
                                 </div>
                                 <div className="card-action">
                                     <button
-                                        disabled={!isValid && !dirty}
+                                        disabled={!isValid && !dirty || loading}
                                         className="btn red"
                                         style={{marginRight: 24}}
                                         onClick={handleSubmit}

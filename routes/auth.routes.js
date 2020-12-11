@@ -10,8 +10,8 @@ router.post(
     '/registration',
     [
         check('email', 'Некорректный email.').isEmail(),
-        check('password', 'Минимальная длина пароля 6 символов.')
-            .isLength({min: 6})
+        check('confirmPassword', 'Минимальная длина пароля 8 символов.')
+            .isLength({min: 8})
     ],
     async (req, res) => {
     try {
@@ -26,7 +26,7 @@ router.post(
             })
         }
 
-        const {email, password} = req.body;
+        const {email, confirmPassword, lastName, firstName, patronymic} = req.body;
 
         const candidate = await User.findOne({email});
 
@@ -34,8 +34,8 @@ router.post(
             return res.status(400).json({ message: 'Такой пользователь уже существует.' });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 6546);
-        const user = new User({email, password: hashedPassword});
+        const hashedPassword = await bcrypt.hash(confirmPassword, 12);
+        const user = new User({email, password: hashedPassword, lastName, firstName, patronymic});
 
         await user.save();
 
