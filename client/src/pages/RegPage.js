@@ -25,7 +25,7 @@ export const RegPage = () => {
     const registrationHandler = async (values) => {
         try {
             const data = await request(
-                '/api/auth/registration',
+                '/api/auth/register',
                 'POST',
                 values);
             message(data.message);
