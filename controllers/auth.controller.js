@@ -47,7 +47,7 @@ exports.registerController = async (req, res) => {
         await sgMail
             .send(emailData)
             .then(() => {
-                res.status(201).json({
+                return res.status(201).json({
                     message: `Электронное письмо было отправлено на ${email}`
                 });
             })
@@ -57,10 +57,6 @@ exports.registerController = async (req, res) => {
                     message: 'Что-то пошло не так, попробуйте снова.'
                 });
             });
-
-        await user.save();
-
-        res.status(201).json({message: 'Пользователь создан.'});
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова.'});
     }
