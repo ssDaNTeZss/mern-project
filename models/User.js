@@ -6,6 +6,7 @@ const schema = new Schema({
     lastName: {type: String, required: true},
     firstName: {type: String, required: true},
     patronymic: {type: String, required: false},
+    role: {type: String, default: 'user'},
     data: [{type: Types.ObjectId, ref: 'Data'}]
 });
 

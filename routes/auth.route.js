@@ -5,6 +5,7 @@ const router = express.Router();
 // Загружаем контроллеры
 const {
     registerController,
+    activationController,
     signinController
 } = require('../controllers/auth.controller');
 
@@ -23,5 +24,7 @@ router.post('/register',
 router.post('/login',
     validLogin,
     signinController);
+
+router.post('/activation', activationController);
 
 module.exports = router;

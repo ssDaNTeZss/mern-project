@@ -46,7 +46,6 @@ export const AuthPage = () => {
                 }}
                 validateOnBlur
                 onSubmit={values => {
-                    console.log(values);
                     loginHandler(values);
                 }}
                 validationSchema={validationsSchema}

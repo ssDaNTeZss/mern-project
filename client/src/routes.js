@@ -3,6 +3,7 @@ import {Switch, Route, Redirect} from 'react-router-dom'
 import {HomePage} from "./pages/HomePage";
 import {AuthPage} from "./pages/AuthPage";
 import {RegPage} from "./pages/RegPage";
+import {ActivatePage} from "./pages/ActivatePage";
 
 export const useRoutes = isAuthenticated => {
     if (isAuthenticated) {
@@ -24,6 +25,9 @@ export const useRoutes = isAuthenticated => {
             </Route>
             <Route path="/registration" exact>
                 <RegPage/>
+            </Route>
+            <Route path="/activate/:token" exact>
+                <ActivatePage/>
             </Route>
 
             <Redirect to="/" />

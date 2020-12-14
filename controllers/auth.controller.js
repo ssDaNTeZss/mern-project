@@ -7,12 +7,13 @@ const {validationResult} = require('express-validator');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(config.get('SENDGRID_API_KEY'));
 
+const CLIENT_URL = config.get('CLIENT_URL');
+const JWT_ACCOUNT_ACTIVATION = config.get('JWT_ACCOUNT_ACTIVATION');
+const EMAIL_FROM = config.get('EMAIL_FROM');
+
 exports.registerController = async (req, res) => {
     try {
         // console.log(req.body);
-        const CLIENT_URL = config.get('CLIENT_URL');
-        const JWT_ACCOUNT_ACTIVATION = config.get('JWT_ACCOUNT_ACTIVATION');
-        const EMAIL_FROM = config.get('EMAIL_FROM');
 
         const errors = validationResult(req);
 
@@ -32,7 +33,20 @@ exports.registerController = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(confirmPassword, 12);
-        const user = new User({email, password: hashedPassword, lastName, firstName, patronymic});
+
+        const token = jwt.sign(
+            {
+                email,
+                hashedPassword,
+                lastName,
+                firstName,
+                patronymic
+            },
+            JWT_ACCOUNT_ACTIVATION,
+            {
+                expiresIn: '10m'
+            }
+        );
 
         const emailData = {
             to: email,
@@ -40,9 +54,15 @@ exports.registerController = async (req, res) => {
             subject: "Ссылка для активации аккаунта",
             text: 'Пожалуйста, перейдите по ссылке, чтобы активировать свою учетную запись.',
             html: `
-                <h3>ПУСТО ПУСТО ПУСТО</h3>
+                <h3>Пожалуйста, перейдите по ссылке, чтобы активировать свою учетную запись.</h3>
+                <p>${CLIENT_URL}/users/activate/${token}</p>
+                <hr />
+                <p>Это электронное письмо содержит конфиденциальную информацию.</p>
+                <p>${CLIENT_URL}</p>
             `
         };
+
+        console.log(token);
 
         await sgMail
             .send(emailData)
@@ -62,11 +82,48 @@ exports.registerController = async (req, res) => {
     }
 };
 
+exports.activationController = async (req, res) => {
+    try {
+        const {token} = req.body;
+
+        if (token) {
+            jwt.verify(token, JWT_ACCOUNT_ACTIVATION, (err, decoded) => {
+                if (err) {
+                    console.log('Ошибка активации.');
+                    return res.status(401).json({
+                        errors: 'Срок действия ссылки истек. Зарегистрируйтесь снова.'
+                    });
+                } else {
+                    const {email, hashedPassword, lastName, firstName, patronymic} = jwt.decode(token);
+
+                    const user = new User({
+                        email,
+                        password: hashedPassword,
+                        lastName,
+                        firstName,
+                        patronymic
+                    });
+
+                    user.save((err, user) => {
+                        if (err) {
+                            console.log("Ошибка сохранения");
+                            return res.status(401).json({
+                                message: 'Что-то пошло не так, попробуйте снова.'
+                            });
+                        } else {
+                            return res.status(201).json({message: 'Пользователь создан.'});
+                        }
+                    });
+                }
+            });
+        }
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова.'});
+    }
+};
 
 exports.signinController = async (req, res) => {
     try {
-        console.log(req.body);
-
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {

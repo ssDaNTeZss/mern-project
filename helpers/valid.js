@@ -22,7 +22,6 @@ exports.validSign = [
 
 exports.validLogin = [
     check('email', 'Введите корректный email.')
-        .normalizeEmail()
         .isEmail(),
     check('password', 'Введите пароль.')
         .exists()
