@@ -1,19 +1,34 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import {Navbar} from "../components/Navbar";
+import {useHistory} from 'react-router-dom'
+import logo from "../images/IMG_1737.jpg";
+import {AuthContext} from "../context/AuthContext";
+
 
 export const HomePage = () => {
-    return (
+    const history = useHistory();
+    const auth = useContext(AuthContext);
 
-        <nav>
-            <div className="nav-wrapper">
-                <a href="#!" className="brand-logo">Logo</a>
-                <a href="#" data-target="mobile-demo" className="sidenav-trigger"><i className="material-icons">menu</i></a>
-                <ul className="right hide-on-med-and-down">
-                    <li><a href="sass.html">Sass</a></li>
-                    <li><a href="badges.html">Components</a></li>
-                    <li><a href="collapsible.html">Javascript</a></li>
-                    <li><a href="mobile.html">Mobile</a></li>
-                </ul>
-            </div>
-        </nav>
-)
+    const logoutHandler = event => {
+        event.preventDefault();
+        auth.logout();
+        history.push('/');
+    };
+
+    return (
+       <div className="row">
+           <div className="col"><Navbar/></div>
+           <div className="row app-main valign-wrapper">
+               <div className="col s10">
+                   <h4>Система электронной подачи документов</h4>
+               </div>
+               <div className="col s2 right-align">
+                   <a href="/" onClick={logoutHandler}>
+                   <i className="small material-icons" style={{marginTop: 24}}>exit_to_app</i>
+               </a>
+               </div>
+
+           </div>
+       </div>
+    )
 };
