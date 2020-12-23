@@ -23,7 +23,7 @@ export const AuthPage = () => {
                 '/api/auth/login',
                 'POST',
                 values);
-            auth.login(data.token, data.userId);
+            auth.login(data.token, data.userId, data.userName, data.role);
         } catch (e) {}
     };
 

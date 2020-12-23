@@ -41,7 +41,7 @@ export const PersonalDataPage = () => {
                     </div>
                     <div className="col s12">
                         <ul className="collapsible popout">
-                            <li>
+                            <li className="active">
                                 <div className="collapsible-header">
                                     <i className="material-icons">person</i>
                                     Личные сведения

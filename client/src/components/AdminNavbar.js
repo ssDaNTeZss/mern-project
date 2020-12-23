@@ -3,7 +3,7 @@ import {NavLink} from "react-router-dom";
 import logo from '../images/IMG_1737.jpg'
 import {AuthContext} from "../context/AuthContext";
 
-export const Navbar = () => {
+export const AdminNavbar = () => {
     const auth = useContext(AuthContext);
 
     return (
@@ -20,24 +20,12 @@ export const Navbar = () => {
                 </div>
             </div>
             <div className="row center-align white-text">
-                <h5>{auth.userName}</h5>
+                <h5>{ auth.userName }</h5>
             </div>
             <li>
-                <NavLink to="/home" className="white-text">
+                <a href="" className="white-text">
                     <i className="extra-small material-icons md-light">bookmark</i>
                     <h6 className="h6_navbar">Мои заявления</h6>
-                </NavLink>
-            </li>
-            <li>
-                <NavLink to="/personal-data" className="white-text">
-                    <i className="extra-small material-icons md-light">contacts</i>
-                    <h6 className="h6_navbar">Персональные данные</h6>
-                </NavLink>
-            </li>
-            <li>
-                <a href="" className="white-text">
-                    <i className="extra-small material-icons md-light">collections_bookmark</i>
-                    <h6 className="h6_navbar">Моё поступление</h6>
                 </a>
             </li>
         </ul>

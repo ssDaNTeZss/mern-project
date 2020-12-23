@@ -1,7 +1,6 @@
 import React, {useContext} from 'react';
 import {Navbar} from "../components/Navbar";
 import {useHistory} from 'react-router-dom'
-import logo from "../images/IMG_1737.jpg";
 import {AuthContext} from "../context/AuthContext";
 
 

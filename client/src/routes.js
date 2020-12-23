@@ -1,25 +1,32 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Switch, Route, Redirect} from 'react-router-dom'
 import {HomePage} from "./pages/HomePage";
 import {PersonalDataPage} from "./pages/PersonalDataPage";
 import {AuthPage} from "./pages/AuthPage";
 import {RegPage} from "./pages/RegPage";
 import {ActivatePage} from "./pages/ActivatePage";
+import {AdminHomePage} from "./pages/adminPages/AdminHomePage";
+import {AuthContext} from "./context/AuthContext";
 
-export const useRoutes = isAuthenticated => {
-    if (isAuthenticated) {
-        return (
-            <Switch>
-                <Route path="/home" exact>
-                    <HomePage/>
-                </Route>
-                <Route path="/personal-data" exact>
-                    <PersonalDataPage/>
-                </Route>
+export const useRoutes = (isAuthenticated, role) => {
+    console.log('isAuthenticated: ', isAuthenticated);
+    console.log('Role: ', role);
 
-                <Redirect to="/home" />
-            </Switch>
-        )
+    if (isAuthenticated ) {
+
+            return (
+                <Switch>
+                    <Route path="/home" exact>
+                        <HomePage/>
+                    </Route>
+                    <Route path="/personal-data" exact>
+                        <PersonalDataPage/>
+                    </Route>
+
+                    <Redirect to="/home"/>
+                </Switch>
+            );
+
     }
 
     return (
@@ -34,7 +41,7 @@ export const useRoutes = isAuthenticated => {
                 <ActivatePage/>
             </Route>
 
-            <Redirect to="/" />
+            <Redirect to="/"/>
         </Switch>
     )
 };

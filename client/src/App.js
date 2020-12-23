@@ -7,12 +7,13 @@ import {AuthContext} from "./context/AuthContext";
 import {Navbar} from "./components/Navbar";
 
 function App() {
-    const {token, login, logout, userId} = useAuth();
+    const {token, login, logout, userId, userName, role} = useAuth();
     const isAuthenticated = !!token;
-    const routes = useRoutes(isAuthenticated);
+    // console.log('Role: ', role);
+    const routes = useRoutes(isAuthenticated, role);
     return (
         <AuthContext.Provider value={{
-            token, login, logout, userId, isAuthenticated
+            token, login, logout, userId, isAuthenticated, userName, role
         }}>
             <Router>
                 <div className="navigationPanel">

@@ -148,12 +148,26 @@ exports.signinController = async (req, res) => {
         }
 
         const token = jwt.sign(
-            {userId: user.id},
+            {
+                userId: user.id
+            },
             config.get('JWT_SECRET'),
-            {expiresIn: '5m'}
+            {
+                expiresIn: '1h'
+            }
         );
 
-        res.json({token, userId: user.id});
+        const id = user.id,
+            name = user.firstName;
+
+        console.log(id, name);
+
+        res.json({
+            token,
+            userId: user.id,
+            userName: user.firstName,
+            role: user.role
+        });
 
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова.'});
