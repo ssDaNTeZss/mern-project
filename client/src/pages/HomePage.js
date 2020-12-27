@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import {Navbar} from "../components/Navbar";
 import {useHistory} from 'react-router-dom'
 import {AuthContext} from "../context/AuthContext";
+import {useHttp} from "../hooks/http.hook";
 
 
 export const HomePage = () => {

@@ -9,7 +9,8 @@ import {Navbar} from "./components/Navbar";
 function App() {
     const {token, login, logout, userId, userName, role} = useAuth();
     const isAuthenticated = !!token;
-    // console.log('Role: ', role);
+    console.log('Role: ', role);
+    console.log('userName: ', userName);
     const routes = useRoutes(isAuthenticated, role);
     return (
         <AuthContext.Provider value={{

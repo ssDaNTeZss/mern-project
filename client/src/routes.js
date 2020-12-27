@@ -6,13 +6,13 @@ import {AuthPage} from "./pages/AuthPage";
 import {RegPage} from "./pages/RegPage";
 import {ActivatePage} from "./pages/ActivatePage";
 import {AdminHomePage} from "./pages/adminPages/AdminHomePage";
-import {AuthContext} from "./context/AuthContext";
 
 export const useRoutes = (isAuthenticated, role) => {
     console.log('isAuthenticated: ', isAuthenticated);
     console.log('Role: ', role);
 
     if (isAuthenticated ) {
+        console.log('Authenticated');
 
             return (
                 <Switch>
@@ -27,21 +27,22 @@ export const useRoutes = (isAuthenticated, role) => {
                 </Switch>
             );
 
+
     }
 
-    return (
-        <Switch>
-            <Route path="/" exact>
-                <AuthPage/>
-            </Route>
-            <Route path="/registration" exact>
-                <RegPage/>
-            </Route>
-            <Route path="/activate/:token" exact>
-                <ActivatePage/>
-            </Route>
+        return (
+            <Switch>
+                <Route path="/" exact>
+                    <AuthPage/>
+                </Route>
+                <Route path="/registration" exact>
+                    <RegPage/>
+                </Route>
+                <Route path="/activate/:token" exact>
+                    <ActivatePage/>
+                </Route>
 
-            <Redirect to="/"/>
-        </Switch>
-    )
+                <Redirect to="/"/>
+            </Switch>
+        )
 };
