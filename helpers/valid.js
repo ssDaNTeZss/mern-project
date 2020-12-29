@@ -7,7 +7,7 @@ exports.validSign = [
             min: 2,
             max: 32
         }),
-    check('lastName', 'Имя должно быть от 2 до 32 символов.')
+    check('firstName', 'Имя должно быть от 2 до 32 символов.')
         .notEmpty()
         .isLength({
             min: 2,
@@ -25,4 +25,27 @@ exports.validLogin = [
         .isEmail(),
     check('password', 'Введите пароль.')
         .exists()
+];
+
+exports.validPersonalInf = [
+    check('lastName', 'Фамилия должна быть от 2 до 32 символов.')
+        .notEmpty()
+        .isLength({
+            min: 2,
+            max: 32
+        }),
+    check('firstName', 'Имя должно быть от 2 до 32 символов.')
+        .notEmpty()
+        .isLength({
+            min: 2,
+            max: 32
+        }),
+    check('DOB', 'Не все поля заполнены.')
+        .notEmpty(),
+    check('BPL', 'Не все поля заполнены.')
+        .notEmpty(),
+    check('gender', 'Не все поля заполнены.')
+        .notEmpty(),
+    check('citizenship', 'Не все поля заполнены.')
+        .notEmpty()
 ];

@@ -13,7 +13,8 @@ const {
 // Загружаем контроллеры
 const {
     validSign,
-    validLogin
+    validLogin,
+    validPersonalInf
 } = require('../helpers/valid');
 
 
@@ -25,6 +26,8 @@ router.post('/login',
     validLogin,
     signinController);
 
-router.post('/activation', activationController);
+router.post('/activation',
+    validPersonalInf,
+    activationController);
 
 module.exports = router;

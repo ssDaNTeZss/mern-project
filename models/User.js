@@ -9,10 +9,10 @@ const schema = new Schema({
     role: {type: String, default: 'user'},
     DOB: {type: String, required: false},
     BPL: {type: String, required: false},
-    gender: {type: Number, required: false},
+    gender: {type: String, required: false},
     citizenship: {type: String, required: false},
     citizenship2: {type: String, required: false},
-    data: [{type: Types.ObjectId, ref: 'Data'}]
+    passportInformation: [{type: Types.ObjectId, ref: 'Passport'}]
 });
 
 module.exports = model('User', schema);

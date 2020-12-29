@@ -7,9 +7,12 @@ import {useHttp} from "../hooks/http.hook";
 import {Formik} from "formik";
 import * as yup from 'yup';
 import {useMessage} from "../hooks/message.hook";
-import CustomSelect from "./CustomSelect";
-const options = [
-    {value: 'M', label: 'Мужской'}
+
+const CITIZENSHIP = require('../components/citizenship');
+
+const genderOptions = [
+    {value: 'male', label: 'Мужской'},
+    {value: 'female', label: 'Женский'}
 ];
 
 
@@ -27,7 +30,7 @@ export const PersonalDataPage = () => {
         history.push('/');
     };
 
-    useEffect( () => {
+    useEffect(() => {
         message(error);
         clearError();
     }, [error, message, clearError]);
@@ -50,7 +53,6 @@ export const PersonalDataPage = () => {
                 }
             );
             setData(fetched);
-            console.log(fetched.DOB);
         } catch (e) {
         }
     }, [userId, request]);
@@ -70,10 +72,34 @@ export const PersonalDataPage = () => {
             .typeError('Должно быть строкой'),
         DOB: yup.date()
             .typeError('Должно быть датой')
-            .required('Поле необходимо заполнить'),
+            .required('Обязательное поле'),
         BPL: yup.string()
             .typeError('Должно быть строкой')
-            .required('Поле необходимо заполнить')
+            .required('Поле необходимо заполнить'),
+        gender: yup.string()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
+        citizenship: yup.string()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
+        passportSeries: yup.string()
+            .typeError('Должно быть строкой')
+            .matches(/^[0-9]{4}$/, 'Должно быть 4 цифры')
+            .required('Обязательное поле'),
+        passportID: yup.string()
+            .typeError('Должно быть числом')
+            .matches(/^[0-9]{6}$/, 'Должно быть 6 цифр')
+            .required('Обязательное поле'),
+        passportIssued: yup.string()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
+        departmentCode: yup.string()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
+        dateOfIssue: yup.string()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
+
     });
 
     const saveHandler = async (values) => {
@@ -91,9 +117,22 @@ export const PersonalDataPage = () => {
         }
     };
 
+    console.log(data);
 
+    let st = false;
+    let genderList = genderOptions.length > 0
+        && genderOptions.map((item) => {
+            return (
+                <option value={item.value}>{item.label}</option>
+            )
+        }, this);
 
-    console.log(data.DOB);
+    let citizenshipList = CITIZENSHIP.length > 0
+        && CITIZENSHIP.map((item) => {
+            return (
+                <option value={item.value}>{item.label}</option>
+            )
+        }, this);
 
     return (
         <div className="row">
@@ -114,14 +153,21 @@ export const PersonalDataPage = () => {
                         patronymic: `${data.patronymic || ''}`,
                         DOB: `${data.DOB || ''}`,
                         BPL: `${data.BPL || ''}`,
-                        gender: ''
+                        gender: `${data.gender || ''}`,
+                        citizenship: `${data.citizenship || ''}`,
+                        citizenship2: `${data.citizenship2 || ''}`,
+                        passportSeries: `${data.passportSeries || ''}`,
+                        passportID: `${data.passportID || ''}`,
+                        passportIssued: `${data.passportIssued || ''}`,
+                        departmentCode: `${data.departmentCode || ''}`,
+                        dateOfIssue: `${data.dateOfIssue || ''}`
                     }}
                             validationSchema={validationsSchema}
-                            enableReinitialize={true}
                             onSubmit={values => {
                                 console.log(values);
                                 saveHandler(values);
                             }}
+                            enableReinitialize={true}
                     >
                         {({values, errors, touched, handleChange, handleBlur, isValid, handleSubmit, dirty}) => (
                             <div className="col s12">
@@ -132,7 +178,7 @@ export const PersonalDataPage = () => {
                                             Личные сведения
                                         </div>
                                         <div className="collapsible-body">
-                                            <div className="row">
+                                            <div className="row" style={{margin: 0}}>
                                                 <div className="input-field col s6">
                                                     <input
                                                         type='text'
@@ -200,46 +246,56 @@ export const PersonalDataPage = () => {
                                                     <p className="red-text">{errors.BPL}</p>}
                                                 </div>
                                                 <div className="input-field col s4">
-                                                    <CustomSelect
-                                                        options={options}
-                                                        value={values.gender}
+                                                    <select
+                                                        name='gender'
                                                         onChange={handleChange}
-                                                        className={'browser-default'}
-                                                        />
+                                                        onBlur={handleBlur}
+                                                        value={values.gender}
+                                                    >
+                                                        <option value="" disabled selected>Выберите пол</option>
+                                                        {genderList}
+                                                    </select>
                                                     <label htmlFor='gender'>1.6 Пол *</label>
                                                     {touched.gender && errors.gender &&
                                                     <p className="red-text">{errors.gender}</p>}
                                                 </div>
+
                                                 <div className="input-field col s6">
-                                                    <select>
+                                                    <select
+                                                        name="citizenship"
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        value={values.citizenship}
+                                                    >
                                                         <option value="" disabled selected>Выберите граждансво</option>
-                                                        <option value="1">Test 1</option>
-                                                        <option value="2">Test 2</option>
+                                                        {citizenshipList}
                                                     </select>
-                                                    <label>1.7 Гражданство *</label>
-                                                    <p className="red-text"></p>
+                                                    <label htmlFor='citizenship'>1.7 Гражданство *</label>
+                                                    {touched.citizenship && errors.citizenship &&
+                                                    <p className="red-text">{errors.citizenship}</p>}
                                                 </div>
+
                                                 <div className="input-field col s6">
-                                                    <select>
+                                                    <select
+                                                        name="citizenship2"
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        value={values.citizenship2}>
                                                         <option value="" disabled selected></option>
-                                                        <option value="1">Test 1</option>
-                                                        <option value="2">Test 2</option>
+                                                        {citizenshipList}
                                                     </select>
-                                                    <label>1.8 Второе гражданство (при наличии двойного
+                                                    <label htmlFor='citizenship2'>
+                                                        1.8 Второе гражданство (при наличии двойного
                                                         гражданства)</label>
-                                                    <p className="red-text"></p>
+                                                    {touched.citizenship2 && errors.citizenship2 &&
+                                                    <p className="red-text">{errors.citizenship2}</p>}
                                                 </div>
-                                                <div className="input-field col s4">
+
+                                                <div className="input-field col s3 offset-s9 right-align">
                                                     <button className="btn white red-text text-accent-2">
                                                         Добавить фото
+                                                        <i className="material-icons right">add_a_photo</i>
                                                     </button>
-                                                    <p className="red-text"></p>
-                                                </div>
-                                                <div className="input-field col s8">
-                                                    <label>
-                                                        <input type="checkbox" className="filled-in checkbox-orange"/>
-                                                        <span>Согласен на обработку персональных данных *</span>
-                                                    </label>
                                                     <p className="red-text"></p>
                                                 </div>
                                             </div>
@@ -250,7 +306,87 @@ export const PersonalDataPage = () => {
                                             <i className="material-icons">folder_shared</i>
                                             Документ удостоверяющий личность и гражданство
                                         </div>
-                                        <div className="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+                                        <div className="collapsible-body">
+                                            <div className="row" style={{margin: 0}}>
+                                                <div className="input-field col s4">
+                                                    <input
+                                                        type='text'
+                                                        className='red-input'
+                                                        name='passportSeries'
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        value={values.passportSeries}
+                                                    />
+                                                    <label className="active" htmlFor='passportSeries'>2.1 Серия паспорта *</label>
+                                                    {touched.passportSeries && errors.passportSeries &&
+                                                    <p className="red-text">{errors.passportSeries}</p>}
+                                                </div>
+
+                                                <div className="input-field col s4">
+                                                    <input
+                                                        type='text'
+                                                        className='red-input'
+                                                        name='passportID'
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        value={values.passportID}
+                                                    />
+                                                    <label className="active" htmlFor='passportID'>2.2 Номер паспорта *</label>
+                                                    {touched.passportID && errors.passportID &&
+                                                    <p className="red-text">{errors.passportID}</p>}
+                                                </div>
+
+                                                <div className="input-field col s4">
+                                                    <input
+                                                        type='Date'
+                                                        className='red-input'
+                                                        name='dateOfIssue'
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        value={values.dateOfIssue}
+                                                    />
+                                                    <label className="active" htmlFor='dateOfIssue'>2.3 Дата выдачи *</label>
+                                                    {touched.dateOfIssue && errors.dateOfIssue &&
+                                                    <p className="red-text">{errors.dateOfIssue}</p>}
+                                                </div>
+
+                                                <div className="input-field col s8">
+                                                    <input
+                                                        type='text'
+                                                        className='red-input'
+                                                        name='passportIssued'
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        value={values.passportIssued}
+                                                    />
+                                                    <label className="active" htmlFor='passportIssued'>2.4 Паспорт выдан *</label>
+                                                    {touched.passportIssued && errors.passportIssued &&
+                                                    <p className="red-text">{errors.passportIssued}</p>}
+                                                </div>
+
+                                                <div className="input-field col s4">
+                                                    <input
+                                                        type='text'
+                                                        className='red-input'
+                                                        name='departmentCode'
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        value={values.departmentCode}
+                                                    />
+                                                    <label className="active" htmlFor='departmentCode'>2.5 Код подразделения *</label>
+                                                    {touched.departmentCode && errors.departmentCode &&
+                                                    <p className="red-text">{errors.departmentCode}</p>}
+                                                </div>
+
+                                                <div className="input-field col s4 offset-s8 right-align">
+                                                    <button className="btn white red-text text-accent-2">
+                                                        Добавить фото паспорта
+                                                        <i className="material-icons right">add_a_photo</i>
+                                                    </button>
+                                                    <p className="red-text"></p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </li>
                                     <li>
                                         <div className="collapsible-header">

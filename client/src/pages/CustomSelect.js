@@ -10,10 +10,10 @@ export default ({onChange, options, value, className}) => {
 
     return(
         <Select
-        value={dafaultValue(options, value)}
-        onChange={value => onChange(value)}
-        options={options}
-        className={className}
+            value={dafaultValue(options, value)}
+            onChange={value => onChange(value)}
+            options={options}
+            className={className}
         />
     )
 }
