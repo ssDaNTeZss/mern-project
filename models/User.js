@@ -12,7 +12,8 @@ const schema = new Schema({
     gender: {type: String, required: false},
     citizenship: {type: String, required: false},
     citizenship2: {type: String, required: false},
-    passportInformation: [{type: Types.ObjectId, ref: 'Passport'}]
+    passportInformation: [{type: Types.ObjectId, ref: 'Passport'}],
+    ContactInf: [{type: Types.ObjectId, ref: 'ContactInformation'}]
 });
 
 module.exports = model('User', schema);

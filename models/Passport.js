@@ -6,6 +6,12 @@ const schema = new Schema({
     passportIssued: {type: String, required: true},
     departmentCode: {type: String, required: true},
     dateOfIssue: {type: String, required: true},
+    region: {type: String},
+    point: {type: String},
+    district: {type: String},
+    street: {type: String},
+    house: {type: String},
+    apartment: {type: String},
     owner: [{type: Types.ObjectId, ref: 'User'}]
 });
 

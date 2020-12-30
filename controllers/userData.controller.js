@@ -1,5 +1,6 @@
 const User = require('../models/User'),
-    Passport = require('../models/Passport');
+    Passport = require('../models/Passport'),
+    ContactInformation = require('../models/ContactInformation');
 
 exports.uploadingPersonalDataController = async (req, res) => {
     try {
@@ -19,8 +20,19 @@ exports.uploadingPersonalDataController = async (req, res) => {
             passportID,
             passportIssued,
             departmentCode,
-            dateOfIssue
+            dateOfIssue,
+            region,
+            point,
+            district,
+            street,
+            house,
+            apartment
         } = await Passport.findOne({owner: req.headers.userid});
+
+        const {
+            phone,
+            residenceAddress
+        } = await ContactInformation.findOne({owner: req.headers.userid});
 
         res.json({
             lastName,
@@ -35,7 +47,15 @@ exports.uploadingPersonalDataController = async (req, res) => {
             passportID,
             passportIssued,
             departmentCode,
-            dateOfIssue
+            dateOfIssue,
+            region,
+            point,
+            district,
+            street,
+            house,
+            apartment,
+            phone,
+            residenceAddress
         });
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
@@ -57,8 +77,18 @@ exports.updatingPersonalDataController = async (req, res) => {
             passportID,
             passportIssued,
             departmentCode,
-            dateOfIssue
+            dateOfIssue,
+            region,
+            point,
+            district,
+            street,
+            house,
+            apartment,
+            phone,
+            residenceAddress
         } = req.body;
+
+        console.log(req.body);
 
         let user = await User.findById(req.headers.userid);
         user.lastName = lastName;
@@ -71,7 +101,6 @@ exports.updatingPersonalDataController = async (req, res) => {
         user.citizenship2 = citizenship2;
 
         let passport = await Passport.findOne({owner: req.headers.userid});
-        console.log(passport)
         if (!passport) {
             const createPassport = new Passport({
                 passportSeries,
@@ -79,6 +108,12 @@ exports.updatingPersonalDataController = async (req, res) => {
                 passportIssued,
                 departmentCode,
                 dateOfIssue,
+                region,
+                point,
+                district,
+                street,
+                house,
+                apartment,
                 owner: req.headers.userid
             });
 
@@ -88,8 +123,6 @@ exports.updatingPersonalDataController = async (req, res) => {
                     return res.status(401).json({
                         message: 'Что-то пошло не так, попробуйте снова.'
                     });
-                } else {
-                    res.status(201).json({message: 'Данные изменены.'});
                 }
             });
         } else {
@@ -98,15 +131,49 @@ exports.updatingPersonalDataController = async (req, res) => {
             passport.passportIssued = passportIssued;
             passport.departmentCode = departmentCode;
             passport.dateOfIssue = dateOfIssue;
+            passport.region = region;
+            passport.point = point;
+            passport.district = district;
+            passport.street = street;
+            passport.house = house;
+            passport.apartment = apartment;
 
-            passport.save((err, user) => {
+            passport.save((err, passport) => {
                 if (err) {
                     console.log("Ошибка сохранения");
                     return res.status(401).json({
                         message: 'Что-то пошло не так, попробуйте снова.'
                     });
-                } else {
-                    res.status(201).json({message: 'Данные изменены.'});
+                }
+            });
+        }
+
+        let contactInf = await ContactInformation.findOne({owner: req.headers.userid});
+        if (!contactInf) {
+            const createContactInf = new ContactInformation({
+                phone,
+                residenceAddress,
+                owner: req.headers.userid
+            });
+
+            createContactInf.save((err, user) => {
+                if (err) {
+                    console.log("Ошибка сохранения");
+                    return res.status(401).json({
+                        message: 'Что-то пошло не так, попробуйте снова.'
+                    });
+                }
+            });
+        } else {
+            contactInf.phone = phone;
+            contactInf.residenceAddress = residenceAddress;
+
+            contactInf.save((err, contactInf) => {
+                if (err) {
+                    console.log("Ошибка сохранения");
+                    return res.status(401).json({
+                        message: 'Что-то пошло не так, попробуйте снова.'
+                    });
                 }
             });
         }
@@ -118,7 +185,7 @@ exports.updatingPersonalDataController = async (req, res) => {
                     message: 'Что-то пошло не так, попробуйте снова.'
                 });
             } else {
-                res.status(201).json({message: 'Данные изменены.'});
+                return res.status(201).json({message: 'Данные изменены.'});
             }
         });
     } catch (e) {
