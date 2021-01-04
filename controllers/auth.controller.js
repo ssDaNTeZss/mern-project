@@ -44,7 +44,7 @@ exports.registerController = async (req, res) => {
             },
             JWT_ACCOUNT_ACTIVATION,
             {
-                expiresIn: '10m'
+                expiresIn: '20m'
             }
         );
 
@@ -54,8 +54,26 @@ exports.registerController = async (req, res) => {
             subject: "Ссылка для активации аккаунта",
             text: 'Пожалуйста, перейдите по ссылке, чтобы активировать свою учетную запись.',
             html: `
-                <h3>Пожалуйста, перейдите по ссылке, чтобы активировать свою учетную запись.</h3>
+                <p>Здравствуйте!</p>
+                </br>
+                <p>Вы получили это сообщение, так как ваш адрес был использован при регистрации нового пользователя личного кабинета абитуриента.</p>
+                </br>
+                <p>Для подтверждения регистрации воспользуйтесь кнопкой</p>
+                </br>                
+                <a style="width:250px;height:46px;display:block;background-color:rgb(244,67,54);
+                color:#fff;padding:5px 10px;line-height:44px;font-size:18px;text-decoration:none;"
+                href="${CLIENT_URL}/activate/${token}">Подтверждение регистрации</a>                
+                </br>
+                <p>Если переход по кнопке не работает, скопируйте ссылку в адресную строку браузера.</p>
+                </br></br>
                 <p>${CLIENT_URL}/activate/${token}</p>
+                </br>
+                <p>Ссылка действительна в течение 20 минут с момента отправки данного письма.</p>
+                </br>
+                <p>Если вы не пытались зарегистрироваться в личном кабинете абитуриента ПИМУ, просто проигнорируйте это письмо. Возможно, просто кто-то совершил ошибку.</p>
+                </br>
+                <p>С наилучшими пожеланиями, DaNTeZ.</p>
+                </br>
                 <hr />
                 <p>Это электронное письмо содержит конфиденциальную информацию.</p>
                 <p>${CLIENT_URL}</p>
@@ -166,6 +184,21 @@ exports.signinController = async (req, res) => {
             token,
             userId: user.id,
             userName: user.firstName,
+            role: user.role
+        });
+
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова.'});
+    }
+};
+
+
+exports.roleController = async (req, res) => {
+    try {
+        const {id} = req.body;
+        const user = await User.findById(id);
+
+        res.json({
             role: user.role
         });
 

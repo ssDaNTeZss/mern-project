@@ -1,0 +1,26 @@
+[
+  {
+    "value": "nightSchool",
+    "label": "Вечерняя школа"
+  },
+  {
+    "value": "SPO",
+    "label": "СПО"
+  },
+  {
+    "value": "NPO",
+    "label": "НПО"
+  },
+  {
+    "value": "secondarySchool",
+    "label": "Средняя общеобразовательная школа"
+  },
+  {
+    "value": "correctionalSchool",
+    "label": "Коррекционная школа"
+  },
+  {
+    "value": "university",
+    "label": "ВУЗ"
+  }
+]

@@ -6,7 +6,8 @@ const router = express.Router();
 const {
     registerController,
     activationController,
-    signinController
+    signinController,
+    roleController
 } = require('../controllers/auth.controller');
 
 // Load Validators
@@ -25,6 +26,9 @@ router.post('/register',
 router.post('/login',
     validLogin,
     signinController);
+
+router.post('/role',
+    roleController);
 
 router.post('/activation',
     validPersonalInf,

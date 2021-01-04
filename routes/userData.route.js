@@ -5,7 +5,8 @@ const router = express.Router();
 // Загружаем контроллеры
 const {
     uploadingPersonalDataController,
-    updatingPersonalDataController
+    updatingPersonalDataController,
+    loadingFilesController
 } = require('../controllers/userData.controller');
 
 // Load Validators
@@ -17,5 +18,6 @@ const {
 
 router.get('/data', uploadingPersonalDataController);
 router.put('/data/update', updatingPersonalDataController);
+router.post('/data/loading', loadingFilesController);
 
 module.exports = router;

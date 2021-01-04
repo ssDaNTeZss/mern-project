@@ -1,4 +1,5 @@
 import {useState, useCallback, useEffect} from 'react';
+import {useHttp} from "./http.hook";
 
 const storageName = 'userData';
 
@@ -9,6 +10,17 @@ export const useAuth = () => {
     const [userName, setUserName] = useState(null);
     const [role, setRole] = useState(null);
 
+    const {request} = useHttp();
+    const roleHandler = async (token, userId, firstName) => {
+        try {
+            const getData = await request(
+                '/api/auth/role',
+                'POST',
+                {id: userId});
+            console.log(firstName);
+            login(token, userId, firstName, getData.role);
+        } catch (e) {}
+    };
 
     const login = useCallback((jwtToken, id, firstName, R) => {
         setToken(jwtToken);
@@ -17,7 +29,7 @@ export const useAuth = () => {
         setRole(R);
 
         localStorage.setItem(storageName, JSON.stringify({
-            userId: id, token: jwtToken, userName: firstName
+            userId: id, token: jwtToken, userName: firstName, role: R
         }))
     }, []);
 
@@ -32,8 +44,10 @@ export const useAuth = () => {
         const data = JSON.parse(localStorage.getItem(storageName));
 
         if (data && data.token) {
-            login(data.token, data.userId, data.userName);
+            //login(data.token, data.userId, data.userName);
+            roleHandler(data.token, data.userId, data.userName);
         }
+
         setReady(true);
     }, [login]);
 

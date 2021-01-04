@@ -58,12 +58,20 @@ exports.uploadingPersonalDataController = async (req, res) => {
             residenceAddress
         });
     } catch (e) {
-        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'});
+        console.log(e);
     }
 };
 
 exports.updatingPersonalDataController = async (req, res) => {
     try {
+        console.log(req.body.file[0].file);
+        console.log(req.body.files);
+
+        let pp = req.body.file;
+        pp.mv('../public/img' + pp[0].name);
+
+
         const {
             lastName,
             firstName,
@@ -88,7 +96,7 @@ exports.updatingPersonalDataController = async (req, res) => {
             residenceAddress
         } = req.body;
 
-        console.log(req.body);
+        // console.log(req.body);
 
         let user = await User.findById(req.headers.userid);
         user.lastName = lastName;
@@ -189,6 +197,21 @@ exports.updatingPersonalDataController = async (req, res) => {
             }
         });
     } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
+    }
+};
+
+exports.loadingFilesController = async (req, res) => {
+    try {
+        if (req.files === null) {
+            return res.status(400).json({msg: 'No file uploaded'});
+        }
+
+        // const file = req.files.file;
+        console.log(req.files);
+
+    } catch (e) {
+        console.log(e);
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'})
     }
 };
