@@ -1,0 +1,50 @@
+[
+  {
+    "value": "certificate",
+    "label": "Аттестат о среднем общем образовании с отличием и/или золотая/серебряная медаль"
+  },
+  {
+    "value": "diploma",
+    "label": "Диплом о среднем профессиональном образовании с отличием "
+  },
+  {
+    "value": "olympiads",
+    "label": "Участие в олимпиадах и иных конкурсах "
+  },
+  {
+    "value": "GTO",
+    "label": "Золотой знак отличия ГТО"
+  },
+  {
+    "value": "volunteering",
+    "label": "Осуществление волонтерской деятельности"
+  },
+  {
+    "value": "OlympicGames",
+    "label": "Статус чемпиона и призера Олимпийских игр"
+  },
+  {
+    "value": "ParalympicGames",
+    "label": "Статус чемпиона и призера Паралимпийский игр"
+  },
+  {
+    "value": "Deaflympics",
+    "label": "Статус чемпиона и призера Сурдлимпийский игр"
+  },
+  {
+    "value": "WorldChampion",
+    "label": "Чемпион мира"
+  },
+  {
+    "value": "EuropeanChampion",
+    "label": "Чемпион Европы"
+  },
+  {
+    "value": "WorldChampionshipWinner",
+    "label": "Победитель первенства мира"
+  },
+  {
+    "value": "EuropeanChampionshipWinner",
+    "label": "Победитель первенства Европы"
+  }
+]

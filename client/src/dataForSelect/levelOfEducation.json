@@ -1,0 +1,18 @@
+[
+  {
+    "value": "undergraduate",
+    "label": "Бакалавриат"
+  },
+  {
+    "value": "magistracy",
+    "label": "Магистратура"
+  },
+  {
+    "value": "postgraduateStudies",
+    "label": "Аспирантура"
+  },
+  {
+    "value": "SPO",
+    "label": "СПО"
+  }
+]

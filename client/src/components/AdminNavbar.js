@@ -27,6 +27,10 @@ export const AdminNavbar = () => {
                     <i className="extra-small material-icons md-light">bookmark</i>
                     <h6 className="h6_navbar">Мои заявления</h6>
                 </a>
+                <NavLink to="/directions" className="white-text">
+                    <i className="extra-small material-icons md-light">collections_bookmark</i>
+                    <h6 className="h6_navbar">Направления</h6>
+                </NavLink>
             </li>
         </ul>
     )

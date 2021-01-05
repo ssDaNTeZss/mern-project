@@ -5,13 +5,16 @@ import {AuthContext} from "../context/AuthContext";
 import {FieldArray, Formik} from "formik";
 import M from "materialize-css";
 import * as yup from "yup";
+import {useHttp} from "../hooks/http.hook";
 
 const EDUCATION = require('../dataForSelect/educationalInstitution');
+const ACHIEVEMENTS = require('../dataForSelect/individualAchievements');
 
 
 export const CreateStatementPage = () => {
     const history = useHistory();
     const auth = useContext(AuthContext);
+    const {loading, error, request, clearError} = useHttp();
 
     const logoutHandler = event => {
         event.preventDefault();
@@ -38,6 +41,9 @@ export const CreateStatementPage = () => {
             .typeError('Должно быть строкой')
             .matches(/^[0-9]{7,14}$/, 'Должно быть от 7 до 14 цифр')
             .required('Обязательное поле'),
+        nameEI: yup.string()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
         dateOfIssue: yup.string()
             .typeError('Должно быть строкой')
             .required('Обязательное поле'),
@@ -55,7 +61,15 @@ export const CreateStatementPage = () => {
             }).required(),
             type: yup.string().oneOf(['image/png', 'image/jpeg', 'image/pjpeg', 'application/pdf'], 'Добавьте файл с правильным форматом').required('Добавьте файл с правильным форматом'),
             name: yup.string().required()
-        }).typeError('Добавьте файл')).required('Обязательное поле')
+        }).typeError('Добавьте файл')).required('Обязательное поле'),
+        file2: yup.array().of(yup.object().shape({
+            file: yup.mixed().test('fileSize', 'Размер файла больше 10 МБ', (value) => {
+                if (!value) return false;
+                return value.size < 10485760
+            }).required(),
+            type: yup.string().oneOf(['image/png', 'image/jpeg', 'image/pjpeg', 'application/pdf'], 'Добавьте файл с правильным форматом').required('Добавьте файл с правильным форматом'),
+            name: yup.string().required()
+        }).typeError('Добавьте файл'))
     });
 
     const documentOptions = [
@@ -77,6 +91,17 @@ export const CreateStatementPage = () => {
             )
         }, this);
 
+    let achievementsList = ACHIEVEMENTS.length > 0
+        && ACHIEVEMENTS.map((item) => {
+            return (
+                <div className="col s4">
+                    <label>
+                        <input type="checkbox" value={item.value} name="achievements"/>
+                        <span>{item.label}</span>
+                    </label>
+                </div>
+            )
+        }, this);
 
     // useEffect(() => {
     //     if (value.document === 'certificate') {
@@ -130,12 +155,15 @@ export const CreateStatementPage = () => {
                         dateOfIssue: '',
                         educationalInstitution: '',
                         nameEI: '',
-                        yearOfEnding: ''
+                        yearOfEnding: '',
+                        file: undefined,
+                        file2: undefined
 
                     }}
                             validationSchema={validationsSchema}
                             onSubmit={values => {
                                 console.log(values);
+                                console.log('qwe');
                             }}
                             enableReinitialize={true}
                     >
@@ -288,18 +316,74 @@ export const CreateStatementPage = () => {
                                                         </FieldArray>
                                                     </div>
                                                     <div className="file-path-wrapper">
-                                                        <input className="file-path validate" type="text"/>
+                                                        <input
+                                                            className="file-path validate"
+                                                            type="text"
+                                                            placeholder="Загрузите один файл"/>
                                                     </div>
                                                     {getArrErrorsMessages(errors.file).map((error) => getError(true, error))}
+                                                    {touched.file && errors.file &&
+                                                    <span className="helper-text red-text" data-error="wrong"
+                                                          data-success="right">{errors.file}</span>}
                                                 </div>
                                             </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div className="collapsible-header">
+                                            <i className="material-icons">grade</i>
+                                            <b>Индивидуальные достижения</b>
+                                        </div>
+                                        <div className="collapsible-body">
                                             <div className="row" style={{margin: 0}}>
+                                                {achievementsList}
                                             </div>
-
-
+                                            <div className="row" style={{margin: 0}}>
+                                                <div className="file-field input-field">
+                                                    <div className="btn white red-text text-accent-2">
+                                                        <i className="material-icons right">scanner</i>
+                                                        <span>Добавить скан документа об образовании</span>
+                                                        <FieldArray name='file2'>
+                                                            {(arrayHelper) => (
+                                                                <input type="file"
+                                                                       name='file2'
+                                                                       multiple
+                                                                       onChange={event => {
+                                                                           const {files} = event.target;
+                                                                           const file = getFileSchema(files.item(0));
+                                                                           if (!file) {
+                                                                               arrayHelper.remove(0);
+                                                                           }
+                                                                           if (Array.isArray(values.file)) {
+                                                                               arrayHelper.replace(0, file);
+                                                                           } else {
+                                                                               arrayHelper.push(file);
+                                                                           }
+                                                                       }}
+                                                                       onBlur={handleBlur}/>
+                                                            )}
+                                                        </FieldArray>
+                                                    </div>
+                                                    <div className="file-path-wrapper">
+                                                        <input
+                                                            className="file-path validate"
+                                                            type="text"
+                                                            placeholder="Загрузите один или несколько файлов"/>
+                                                    </div>
+                                                    {getArrErrorsMessages(errors.file2).map((error) => getError(true, error))}
+                                                </div>
+                                            </div>
                                         </div>
                                     </li>
                                 </ul>
+                                <button
+                                    disabled={!isValid && !dirty || loading}
+                                    className="btn red"
+                                    style={{marginRight: 24}}
+                                    onClick={handleSubmit}
+                                    type='submit'>
+                                    Сохранить
+                                </button>
                             </div>
                         )}
                     </Formik>

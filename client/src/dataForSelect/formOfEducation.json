@@ -1,0 +1,14 @@
+[
+  {
+    "value": "fullTime",
+    "label": "Очная"
+  },
+  {
+    "value": "extramural",
+    "label": "Заочная"
+  },
+  {
+    "value": "partTime",
+    "label": "Очно-заочная"
+  }
+]

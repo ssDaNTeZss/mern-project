@@ -8,6 +8,8 @@ import {ActivatePage} from "./pages/ActivatePage";
 import {AdminHomePage} from "./pages/adminPages/AdminHomePage";
 import {CreateStatementPage} from "./pages/CreateStatementPage";
 import {useHttp} from "./hooks/http.hook";
+import {DirectionsPage} from "./pages/adminPages/DirectionsPage";
+import {CreateDirectionsPage} from "./pages/adminPages/CreateDirectionPage";
 
 export const useRoutes = (isAuthenticated, role) => {
     if (isAuthenticated) {
@@ -24,6 +26,7 @@ export const useRoutes = (isAuthenticated, role) => {
                         <CreateStatementPage/>
                     </Route>
 
+
                     <Redirect to="/statements"/>
                 </Switch>
             );
@@ -34,6 +37,12 @@ export const useRoutes = (isAuthenticated, role) => {
                 <Switch>
                     <Route path="/home" exact>
                         <AdminHomePage/>
+                    </Route>
+                    <Route path="/directions" exact>
+                        <DirectionsPage/>
+                    </Route>
+                    <Route path="/create-direction" exact>
+                        <CreateDirectionsPage/>
                     </Route>
 
                     <Redirect to="/home"/>
