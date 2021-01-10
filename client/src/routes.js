@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Switch, Route, Redirect} from 'react-router-dom'
 import {HomePage} from "./pages/HomePage";
 import {PersonalDataPage} from "./pages/PersonalDataPage";
@@ -7,9 +7,9 @@ import {RegPage} from "./pages/RegPage";
 import {ActivatePage} from "./pages/ActivatePage";
 import {AdminHomePage} from "./pages/adminPages/AdminHomePage";
 import {CreateStatementPage} from "./pages/CreateStatementPage";
-import {useHttp} from "./hooks/http.hook";
 import {DirectionsPage} from "./pages/adminPages/DirectionsPage";
 import {CreateDirectionsPage} from "./pages/adminPages/CreateDirectionPage";
+import {TestPage} from "./pages/adminPages/TestPage";
 
 export const useRoutes = (isAuthenticated, role) => {
     if (isAuthenticated) {
@@ -43,6 +43,9 @@ export const useRoutes = (isAuthenticated, role) => {
                     </Route>
                     <Route path="/create-direction" exact>
                         <CreateDirectionsPage/>
+                    </Route>
+                    <Route path="/test" exact>
+                        <TestPage/>
                     </Route>
 
                     <Redirect to="/home"/>

@@ -15,48 +15,63 @@ exports.uploadingPersonalDataController = async (req, res) => {
             citizenship2
         } = await User.findById(req.headers.userid);
 
-        const {
-            passportSeries,
-            passportID,
-            passportIssued,
-            departmentCode,
-            dateOfIssue,
-            region,
-            point,
-            district,
-            street,
-            house,
-            apartment
-        } = await Passport.findOne({owner: req.headers.userid});
+        console.log(!BPL);
 
-        const {
-            phone,
-            residenceAddress
-        } = await ContactInformation.findOne({owner: req.headers.userid});
+        if (BPL) {
+            const {
+                passportSeries,
+                passportID,
+                passportIssued,
+                departmentCode,
+                dateOfIssue,
+                region,
+                point,
+                district,
+                street,
+                house,
+                apartment
+            } = await Passport.findOne({owner: req.headers.userid});
 
-        res.json({
-            lastName,
-            firstName,
-            patronymic,
-            DOB,
-            BPL,
-            gender,
-            citizenship,
-            citizenship2,
-            passportSeries,
-            passportID,
-            passportIssued,
-            departmentCode,
-            dateOfIssue,
-            region,
-            point,
-            district,
-            street,
-            house,
-            apartment,
-            phone,
-            residenceAddress
-        });
+            const {
+                phone,
+                residenceAddress
+            } = await ContactInformation.findOne({owner: req.headers.userid});
+
+            res.json({
+                lastName,
+                firstName,
+                patronymic,
+                DOB,
+                BPL,
+                gender,
+                citizenship,
+                citizenship2,
+                passportSeries,
+                passportID,
+                passportIssued,
+                departmentCode,
+                dateOfIssue,
+                region,
+                point,
+                district,
+                street,
+                house,
+                apartment,
+                phone,
+                residenceAddress
+            });
+        } else {
+            res.json({
+                lastName,
+                firstName,
+                patronymic,
+                DOB,
+                BPL,
+                gender,
+                citizenship,
+                citizenship2
+            });
+        }
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'});
         console.log(e);
@@ -65,13 +80,6 @@ exports.uploadingPersonalDataController = async (req, res) => {
 
 exports.updatingPersonalDataController = async (req, res) => {
     try {
-        console.log(req.body.file[0].file);
-        console.log(req.body.files);
-
-        let pp = req.body.file;
-        pp.mv('../public/img' + pp[0].name);
-
-
         const {
             lastName,
             firstName,

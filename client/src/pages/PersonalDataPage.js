@@ -15,7 +15,6 @@ const genderOptions = [
     {value: 'female', label: 'Женский'}
 ];
 
-
 export const PersonalDataPage = () => {
         const history = useHistory();
         const message = useMessage();
@@ -119,14 +118,14 @@ export const PersonalDataPage = () => {
                 .typeError('Должно быть строкой')
                 .matches(/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/, 'Формат номера')
                 .required('Обязательное поле'),
-            file: yup.array().of(yup.object().shape({
-                file: yup.mixed().test('fileSize', 'Размер файла больше 10 МБ', (value) => {
-                    if (!value) return false;
-                    return value.size < 10485760
-                }).required(),
-                type: yup.string().oneOf(['image/png', 'image/jpeg', 'image/pjpeg'], 'Добавьте файл с правильным форматом').required('Добавьте файл с правильным форматом'),
-                name: yup.string().required()
-            }).typeError('Добавьте файл')).required('Обязательное поле')
+            // file: yup.array().of(yup.object().shape({
+            //     file: yup.mixed().test('fileSize', 'Размер файла больше 10 МБ', (value) => {
+            //         if (!value) return false;
+            //         return value.size < 10485760
+            //     }).required(),
+            //     type: yup.string().oneOf(['image/png', 'image/jpeg', 'image/pjpeg'], 'Добавьте файл с правильным форматом').required('Добавьте файл с правильным форматом'),
+            //     name: yup.string().required()
+            // }).typeError('Добавьте файл')).required('Обязательное поле')
         });
 
         const getFileSchema = (file) => file && ({
@@ -154,9 +153,9 @@ export const PersonalDataPage = () => {
             return result
         };
 
-
         const saveHandler = async (values) => {
             try {
+                console.log(values);
                 const data = await request(
                     '/api/userData/data/update',
                     'PUT',
@@ -428,58 +427,56 @@ export const PersonalDataPage = () => {
                                                                   data-success="right">{errors.citizenship2}</span>}
                                                         </div>
                                                     </div>
+                                                    {/*<div className="file-field input-field">*/}
+                                                    {/*    <div className="btn white red-text text-accent-2">*/}
+                                                    {/*        <i className="material-icons right">add_a_photo</i>*/}
+                                                    {/*        <span>Добавить фото</span>*/}
+                                                    {/*        <FieldArray name='file'>*/}
+                                                    {/*            {(arrayHelper) => (*/}
+                                                    {/*                <input type="file"*/}
+                                                    {/*                       name='file'*/}
+                                                    {/*                       onChange={event => {*/}
+                                                    {/*                           const {files} = event.target;*/}
+                                                    {/*                           const file = getFileSchema(files.item(0));*/}
+                                                    {/*                           if (!file) {*/}
+                                                    {/*                               arrayHelper.remove(0);*/}
+                                                    {/*                           }*/}
+                                                    {/*                           if (Array.isArray(values.file)) {*/}
+                                                    {/*                               arrayHelper.replace(0, file);*/}
+                                                    {/*                           } else {*/}
+                                                    {/*                               arrayHelper.push(file);*/}
+                                                    {/*                           }*/}
+                                                    {/*                       }}*/}
+                                                    {/*                       onBlur={handleBlur}/>*/}
+                                                    {/*            )}*/}
+                                                    {/*        </FieldArray>*/}
+                                                    {/*    </div>*/}
+                                                    {/*    <div className="file-path-wrapper">*/}
+                                                    {/*        <input className="file-path validate" type="text"/>*/}
+                                                    {/*    </div>*/}
+                                                    {/*    {getArrErrorsMessages(errors.file).map((error) => getError(true, error))}*/}
+                                                    {/*</div>*/}
+                                                    {/*<form onSubmit={onSubmit}>*/}
+                                                    {/*    <div className="file-field input-field">*/}
+                                                    {/*        <div className="btn white red-text text-accent-2">*/}
+                                                    {/*            <i className="material-icons right">add_a_photo</i>*/}
+                                                    {/*            <span>Добавить фото</span>*/}
+                                                    {/*            <input type="file"*/}
+                                                    {/*                   id='customFile'*/}
+                                                    {/*                   onChange={onChange}*/}
+                                                    {/*                   onBlur={handleBlur}/>*/}
+                                                    {/*        </div>*/}
+                                                    {/*        <div className="file-path-wrapper">*/}
+                                                    {/*            <input className="file-path validate" type="text"/>*/}
+                                                    {/*        </div>*/}
+                                                    {/*    </div>*/}
 
-
-                                                    <div className="file-field input-field">
-                                                        <div className="btn white red-text text-accent-2">
-                                                            <i className="material-icons right">add_a_photo</i>
-                                                            <span>Добавить фото</span>
-                                                            <FieldArray name='file'>
-                                                                {(arrayHelper) => (
-                                                                    <input type="file"
-                                                                           name='file'
-                                                                           onChange={event => {
-                                                                               const {files} = event.target;
-                                                                               const file = getFileSchema(files.item(0));
-                                                                               if (!file) {
-                                                                                   arrayHelper.remove(0);
-                                                                               }
-                                                                               if (Array.isArray(values.file)) {
-                                                                                   arrayHelper.replace(0, file);
-                                                                               } else {
-                                                                                   arrayHelper.push(file);
-                                                                               }
-                                                                           }}
-                                                                           onBlur={handleBlur}/>
-                                                                )}
-                                                            </FieldArray>
-                                                        </div>
-                                                        <div className="file-path-wrapper">
-                                                            <input className="file-path validate" type="text"/>
-                                                        </div>
-                                                        {getArrErrorsMessages(errors.file).map((error) => getError(true, error))}
-                                                    </div>
-                                                    <form onSubmit={onSubmit}>
-                                                        <div className="file-field input-field">
-                                                            <div className="btn white red-text text-accent-2">
-                                                                <i className="material-icons right">add_a_photo</i>
-                                                                <span>Добавить фото</span>
-                                                                <input type="file"
-                                                                       id='customFile'
-                                                                       onChange={onChange}
-                                                                       onBlur={handleBlur}/>
-                                                            </div>
-                                                            <div className="file-path-wrapper">
-                                                                <input className="file-path validate" type="text"/>
-                                                            </div>
-                                                        </div>
-
-                                                        <input
-                                                            type='submit'
-                                                            value='Upload'
-                                                            className='btn red'
-                                                        />
-                                                    </form>
+                                                    {/*    <input*/}
+                                                    {/*        type='submit'*/}
+                                                    {/*        value='Upload'*/}
+                                                    {/*        className='btn red'*/}
+                                                    {/*    />*/}
+                                                    {/*</form>*/}
                                                 </div>
                                             </div>
                                         </li>
@@ -731,13 +728,6 @@ export const PersonalDataPage = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </li>
-                                        <li>
-                                            <div className="collapsible-header">
-                                                <i className="material-icons">people</i>
-                                                Родственники и законные представители
-                                            </div>
-                                            <div className="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
                                         </li>
                                     </ul>
                                     <button
