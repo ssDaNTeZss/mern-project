@@ -80,7 +80,7 @@ exports.registerController = async (req, res) => {
             `
         };
 
-        console.log(token);
+        //console.log(token);
 
         await sgMail
             .send(emailData)
@@ -202,6 +202,35 @@ exports.roleController = async (req, res) => {
             role: user.role
         });
 
+    } catch (e) {
+        res.status(500).json({message: 'Что-то пошло не так, попробуйте снова.'});
+    }
+};
+
+exports.createTestUserController = async (req, res) => {
+    try {
+        const {email, confirmPassword, lastName, firstName, patronymic} = req.body;
+
+        const hashedPassword = await bcrypt.hash(confirmPassword, 12);
+
+        const user = new User({
+            email,
+            password: hashedPassword,
+            lastName,
+            firstName,
+            patronymic
+        });
+
+        user.save((err, user) => {
+            if (err) {
+                console.log("Ошибка сохранения");
+                return res.status(401).json({
+                    message: 'Что-то пошло не так, попробуйте снова.'
+                });
+            } else {
+                return res.status(201).json({message: 'Пользователь создан.'});
+            }
+        });
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова.'});
     }

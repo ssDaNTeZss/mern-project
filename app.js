@@ -1,7 +1,7 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const config = require('config');
-const path = require('path')
+const path = require('path');
 const mongoose = require('mongoose');
 
 const app = express();
@@ -15,6 +15,7 @@ app.use('/api/auth', require('./routes/auth.route'));
 app.use('/api/userData', require('./routes/userData.route'));
 app.use('/api/directions', require('./routes/directions.route'));
 app.use('/api/upload', require('./routes/file.route'));
+app.use('/api/statement', require('./routes/userStatement.route'));
 
 if (process.env.NODE_ENV === 'production') {
     app.use('/', express.static(path.join(__dirname, 'client', 'build')));

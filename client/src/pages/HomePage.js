@@ -1,13 +1,19 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Navbar} from "../components/Navbar";
+import {TableSt} from "../components/TableSt";
 import {NavLink, useHistory} from 'react-router-dom'
 import {AuthContext} from "../context/AuthContext";
-import {Formik} from "formik";
 import M from "materialize-css";
+import {useMessage} from "../hooks/message.hook";
+import {useHttp} from "../hooks/http.hook";
 
 export const HomePage = () => {
     const history = useHistory();
+    const message = useMessage();
+    const {loading, error, request, clearError} = useHttp();
     const auth = useContext(AuthContext);
+    const {userId} = useContext(AuthContext);
+    const [data, setData] = useState([]);
 
     const logoutHandler = event => {
         event.preventDefault();
@@ -22,6 +28,23 @@ export const HomePage = () => {
         let elems2 = document.querySelectorAll('select');
         let instances2 = M.FormSelect.init(elems2, {});
     });
+
+    const getData = useCallback(async () => {
+        try {
+            const fetched = await request(`/api/statement/getAll`,
+                'GET', null,
+                {
+                    userId
+                }
+            );
+            setData(fetched);
+        } catch (e) {
+        }
+    }, [userId, request]);
+
+    useEffect(() => {
+        getData();
+    }, [getData]);
 
     return (
         <div className="row">
@@ -49,17 +72,15 @@ export const HomePage = () => {
                                     <table>
                                         <thead>
                                         <tr>
-                                            <th>Рег. номер</th>
                                             <th>Уровень образования</th>
                                             <th>Форма обучения</th>
-                                            <th>Форма обучения</th>
+                                            <th>Источник финансирования</th>
                                             <th>Направление подготовки (специальность)</th>
                                             <th>Статус</th>
-                                            <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
-
+                                        <TableSt arr={data} />
                                         </tbody>
                                     </table>
                                     <NavLink to="/create-statement" className="btn red navLinkBtn">

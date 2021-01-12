@@ -6,6 +6,7 @@ import {FieldArray, Formik} from "formik";
 import M from "materialize-css";
 import * as yup from "yup";
 import {useHttp} from "../hooks/http.hook";
+import {useMessage} from "../hooks/message.hook";
 
 const EDUCATION = require('../dataForSelect/educationalInstitution');
 const ACHIEVEMENTS = require('../dataForSelect/individualAchievements');
@@ -26,7 +27,9 @@ const competitionArr = [
 
 export const CreateStatementPage = () => {
     const history = useHistory();
+    const message = useMessage();
     const auth = useContext(AuthContext);
+    const {userId} = useContext(AuthContext);
     const {loading, error, request, clearError} = useHttp();
 
     const [data, setData] = useState([]);
@@ -95,6 +98,32 @@ export const CreateStatementPage = () => {
             .typeError('Должно быть строкой')
             .matches(/^[0-9]{4}$/, 'Должно быть 4 цифры')
             .required('Обязательное поле'),
+        achieve: yup.array()
+            .typeError('Должно быть массивом'),
+        levelOfEducation: yup.string()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
+        formOfEducation: yup.string()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
+        directionOrSpecialty: yup.string()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
+        sourceOfFinancing: yup.array()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
+        competition: yup.string()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
+        typeExam1: yup.string()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
+        typeExam2: yup.string()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
+        typeExam3: yup.string()
+            .typeError('Должно быть строкой')
+            .required('Обязательное поле'),
         // file: yup.array().of(yup.object().shape({
         //     file: yup.mixed().test('fileSize', 'Размер файла больше 10 МБ', (value) => {
         //         if (!value) return false;
@@ -161,12 +190,6 @@ export const CreateStatementPage = () => {
                 </div>
             )
         }, this);
-
-    // useEffect(() => {
-    //     if (value.document === 'certificate') {
-    //         console.log('Аттестат');
-    //     }
-    // }, [values]);
 
     const getFileSchema = (file) => file && ({
         file: file,
@@ -280,6 +303,7 @@ export const CreateStatementPage = () => {
         }, this);
 
     const setCompetition = (e) => {
+        console.log('LLL');
         setComp(e.target.value);
     };
 
@@ -310,6 +334,20 @@ export const CreateStatementPage = () => {
             }
         }, this);
 
+    const saveHandler = async (values) => {
+        try {
+            const data = await request(
+                '/api/statement/create',
+                'POST',
+                values,
+                {
+                    userId
+                }
+            );
+            message(data.message);
+        } catch (e) {
+        }
+    };
 
     return (
         <div className="row">
@@ -333,19 +371,27 @@ export const CreateStatementPage = () => {
                         nameEI: '',
                         yearOfEnding: '',
                         file: undefined,
+                        achieve: Achieve,
                         file2: undefined,
                         levelOfEducation: LOE || '',
                         formOfEducation: FOE || '',
-                        competition: '',
+                        directionOrSpecialty: DOS.id || '',
+                        sourceOfFinancing: SOF.value || '',
+                        competition: Comp || '',
                         exam1: Exam1.value || '',
-                        minScore1: '',
-                        typeExam1: ''
-
+                        minScore1: Exam1.minScore,
+                        typeExam1: '',
+                        exam2: Exam2.value || '',
+                        minScore2: Exam2.minScore,
+                        typeExam2: '',
+                        exam3: Exam3.value || '',
+                        minScore3: Exam3.minScore,
+                        typeExam3: ''
                     }}
                             // validationSchema={validationsSchema}
                             onSubmit={values => {
                                 console.log(values);
-                                console.log('qwe');
+                                saveHandler(values);
                             }}
                             enableReinitialize={true}
                     >
@@ -520,6 +566,9 @@ export const CreateStatementPage = () => {
                                             <div className="row" style={{margin: 0}}>
                                                 {achievementsList}
                                             </div>
+                                            {touched.achieve && errors.achieve &&
+                                            <span className="helper-text red-text" data-error="wrong"
+                                                  data-success="right">{errors.achieve}</span>}
                                             <div className="row" style={{margin: 0}}>
                                                 <div className="file-field input-field">
                                                     <div className="btn white red-text text-accent-2">
@@ -649,6 +698,7 @@ export const CreateStatementPage = () => {
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
                                                         value={values.competition}
+                                                        onChange={setCompetition}
                                                     >
                                                         <option value="" disabled selected>Выберите
                                                         </option>

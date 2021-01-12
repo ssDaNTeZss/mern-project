@@ -7,7 +7,8 @@ const {
     registerController,
     activationController,
     signinController,
-    roleController
+    roleController,
+    createTestUserController
 } = require('../controllers/auth.controller');
 
 // Load Validators
@@ -33,5 +34,9 @@ router.post('/role',
 router.post('/activation',
     validPersonalInf,
     activationController);
+
+// router.post('/create',
+//     validSign,
+//     createTestUserController);
 
 module.exports = router;
