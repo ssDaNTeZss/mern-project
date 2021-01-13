@@ -19,7 +19,7 @@ const schema = new Schema({
     typeExam3: {type: String, required: true},
     status: {type: String, default: 'inProcessing', required: true},
 
-    owner: [{type: Types.ObjectId, ref: 'User'}]
+    owner: {type: Types.ObjectId, ref: 'User'}
 });
 
 module.exports = model('Statement', schema);

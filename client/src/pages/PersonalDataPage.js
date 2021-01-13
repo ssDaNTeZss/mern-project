@@ -20,6 +20,7 @@ export const PersonalDataPage = () => {
         const message = useMessage();
         const {loading, error, request, clearError} = useHttp();
         const auth = useContext(AuthContext);
+        const {token} = useContext(AuthContext);
         const {userId} = useContext(AuthContext);
         const [data, setData] = useState([]);
 
@@ -48,14 +49,13 @@ export const PersonalDataPage = () => {
                 const fetched = await request(`/api/userData/data`,
                     'GET', null,
                     {
-                        userId
+                        Authorization: `Bearer ${token}`
                     }
                 );
                 setData(fetched);
-                console.log(fetched);
             } catch (e) {
             }
-        }, [userId, request]);
+        }, [token, request]);
 
         useEffect(() => {
             getData();
@@ -155,21 +155,18 @@ export const PersonalDataPage = () => {
 
         const saveHandler = async (values) => {
             try {
-                console.log(values);
                 const data = await request(
                     '/api/userData/data/update',
                     'PUT',
                     values,
                     {
-                        userId
+                        Authorization: `Bearer ${auth.token}`
                     }
                 );
                 message(data.message);
             } catch (e) {
             }
         };
-
-        // console.log(data);
 
         let st = false;
         let genderList = genderOptions.length > 0
@@ -214,11 +211,9 @@ export const PersonalDataPage = () => {
         };
 
         const onSubmit = async e => {
-            console.log('EEEEEEE');
             e.preventDefault();
             const formData = new FormData();
             formData.append('file', file);
-            console.log(file);
             try {
                 const data = await request(
                     '/api/userData/data/loading',
@@ -272,7 +267,6 @@ export const PersonalDataPage = () => {
                         }}
                                 validationSchema={validationsSchema}
                                 onSubmit={values => {
-                                    console.log(values);
                                     saveHandler(values);
                                 }}
                                 enableReinitialize={true}

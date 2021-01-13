@@ -13,7 +13,7 @@ exports.uploadingPersonalDataController = async (req, res) => {
             gender,
             citizenship,
             citizenship2
-        } = await User.findById(req.headers.userid);
+        } = await User.findById(req.user.userId);
 
         console.log(!BPL);
 
@@ -30,12 +30,12 @@ exports.uploadingPersonalDataController = async (req, res) => {
                 street,
                 house,
                 apartment
-            } = await Passport.findOne({owner: req.headers.userid});
+            } = await Passport.findOne({owner: req.user.userId});
 
             const {
                 phone,
                 residenceAddress
-            } = await ContactInformation.findOne({owner: req.headers.userid});
+            } = await ContactInformation.findOne({owner: req.user.userId});
 
             res.json({
                 lastName,
@@ -104,9 +104,8 @@ exports.updatingPersonalDataController = async (req, res) => {
             residenceAddress
         } = req.body;
 
-        // console.log(req.body);
 
-        let user = await User.findById(req.headers.userid);
+        let user = await User.findById(req.user.userId);
         user.lastName = lastName;
         user.firstName = firstName;
         user.patronymic = patronymic;
@@ -116,7 +115,7 @@ exports.updatingPersonalDataController = async (req, res) => {
         user.citizenship = citizenship;
         user.citizenship2 = citizenship2;
 
-        let passport = await Passport.findOne({owner: req.headers.userid});
+        let passport = await Passport.findOne({owner: req.user.userId});
         if (!passport) {
             const createPassport = new Passport({
                 passportSeries,
@@ -133,8 +132,9 @@ exports.updatingPersonalDataController = async (req, res) => {
                 owner: req.headers.userid
             });
 
-            createPassport.save((err, user) => {
+            createPassport.save((err, passport) => {
                 if (err) {
+                    console.log("1");
                     console.log("Ошибка сохранения");
                     return res.status(401).json({
                         message: 'Что-то пошло не так, попробуйте снова.'
@@ -156,6 +156,7 @@ exports.updatingPersonalDataController = async (req, res) => {
 
             passport.save((err, passport) => {
                 if (err) {
+                    console.log("2");
                     console.log("Ошибка сохранения");
                     return res.status(401).json({
                         message: 'Что-то пошло не так, попробуйте снова.'
@@ -164,16 +165,17 @@ exports.updatingPersonalDataController = async (req, res) => {
             });
         }
 
-        let contactInf = await ContactInformation.findOne({owner: req.headers.userid});
+        let contactInf = await ContactInformation.findOne({owner: req.user.userId});
         if (!contactInf) {
             const createContactInf = new ContactInformation({
                 phone,
                 residenceAddress,
-                owner: req.headers.userid
+                owner: req.user.userId
             });
 
             createContactInf.save((err, user) => {
                 if (err) {
+                    console.log("3");
                     console.log("Ошибка сохранения");
                     return res.status(401).json({
                         message: 'Что-то пошло не так, попробуйте снова.'
@@ -186,6 +188,7 @@ exports.updatingPersonalDataController = async (req, res) => {
 
             contactInf.save((err, contactInf) => {
                 if (err) {
+                    console.log("4");
                     console.log("Ошибка сохранения");
                     return res.status(401).json({
                         message: 'Что-то пошло не так, попробуйте снова.'
@@ -196,6 +199,7 @@ exports.updatingPersonalDataController = async (req, res) => {
 
         user.save((err, user) => {
             if (err) {
+                console.log("5");
                 console.log("Ошибка сохранения");
                 return res.status(401).json({
                     message: 'Что-то пошло не так, попробуйте снова.'
@@ -212,11 +216,9 @@ exports.updatingPersonalDataController = async (req, res) => {
 exports.loadingFilesController = async (req, res) => {
     try {
         if (req.files === null) {
-            return res.status(400).json({msg: 'No file uploaded'});
+            return res.status(400).json({message: 'No file uploaded'});
         }
 
-        // const file = req.files.file;
-        console.log(req.files);
 
     } catch (e) {
         console.log(e);

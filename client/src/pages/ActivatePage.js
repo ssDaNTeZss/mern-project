@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import logo from '../images/IMG_1737.jpg'
 import {Formik} from "formik";
-import * as yup from 'yup';
 import {NavLink, useParams} from "react-router-dom";
 import {useHttp} from "../hooks/http.hook";
 import {useMessage} from "../hooks/message.hook";

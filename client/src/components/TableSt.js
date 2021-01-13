@@ -3,7 +3,7 @@ import React from 'react';
 const LEVELOFEDUCATION = require('../dataForSelect/levelOfEducation');
 const FORMOFEDUCATION = require('../dataForSelect/formOfEducation');
 
-export const TableSt = ({ arr }) => {
+export const TableSt = ({arr}) => {
     const sourceOfFinancingArr = [
         {value: 'budget', label: 'Бюджет'},
         {value: 'offBudget', label: 'Внебюджет'},
@@ -17,47 +17,62 @@ export const TableSt = ({ arr }) => {
 
     let levelOfEducationList = LEVELOFEDUCATION.length > 0
         && LEVELOFEDUCATION.map((item) => {
-            if (item.value === arr.levelOfEducation) {
-                return (
-                   <>{item.label}</>
-                )
+            for (let i = 0; i < arr.length; i++) {
+                if (item.value === arr[i].levelOfEducation) {
+                    return (
+                        <>{item.label}</>
+                    )
+                }
             }
         }, this);
 
     let formOfEducationList = FORMOFEDUCATION.length > 0
         && FORMOFEDUCATION.map((item) => {
-            if (item.value === arr.formOfEducation) {
-                return (
-                    <>{item.label}</>
-                )
+            for (let i = 0; i < arr.length; i++) {
+                if (item.value === arr[i].formOfEducation) {
+                    return (
+                        <>{item.label}</>
+                    )
+                }
             }
         }, this);
 
     let sourceOfFinancinList = sourceOfFinancingArr.length > 0
         && sourceOfFinancingArr.map((item) => {
-            if (item.value === arr.sourceOfFinancing) {
-                return (
-                    <>{item.label}</>
-                )
+            for (let i = 0; i < arr.length; i++) {
+                if (item.value === arr[i].sourceOfFinancing) {
+                    return (
+                        <>{item.label}</>
+                    )
+                }
             }
         }, this);
 
     let statusList = statusArr.length > 0
         && statusArr.map((item) => {
-            if (item.value === arr.status) {
-                return (
-                    <>{item.label}</>
-                )
+            for (let i = 0; i < arr.length; i++) {
+                if (item.value === arr[i].status) {
+                    return (
+                        <>{item.label}</>
+                    )
+                }
             }
         }, this);
 
-            return (
-                <tr>
-                    <td>{levelOfEducationList}</td>
-                    <td>{formOfEducationList}</td>
-                    <td>{sourceOfFinancinList}</td>
-                    <td>{arr.directionOrSpecialty}</td>
-                    <td>{statusList}</td>
-                </tr>
-            )
+    let dos = arr.length > 0
+        && arr.map((item) => {
+                    return (
+                        <>{arr[0].directionOrSpecialty}</>
+                    )
+        }, this);
+
+    return (
+        <tr>
+            <td>{levelOfEducationList}</td>
+            <td>{formOfEducationList}</td>
+            <td>{sourceOfFinancinList}</td>
+            <td>{dos}</td>
+            <td>{statusList}</td>
+        </tr>
+    )
 };

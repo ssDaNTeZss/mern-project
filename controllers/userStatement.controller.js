@@ -3,8 +3,6 @@ const Directions = require('../models/Directions');
 
 exports.creatingStatementController = async (req, res) => {
     try {
-        console.log(req.body);
-
         const arr = req.body.achieve;
         let ach = [];
         for (let i = 0; i < arr.length; i++) {
@@ -42,7 +40,7 @@ exports.creatingStatementController = async (req, res) => {
             typeExam1,
             typeExam2,
             typeExam3,
-            owner: req.headers.userid
+            owner: req.user.userId
         });
 
         createStatement.save((err, statement) => {
@@ -52,6 +50,8 @@ exports.creatingStatementController = async (req, res) => {
                 return res.status(401).json({
                     message: 'Что-то пошло не так, попробуйте снова.'
                 });
+            } else {
+                return res.status(201).json({message: 'Запись создана.'});
             }
         });
 
@@ -63,29 +63,32 @@ exports.creatingStatementController = async (req, res) => {
 
 exports.getAllController = async (req, res) => {
     try {
-        const {
-            directionOrSpecialtyId,
-            sourceOfFinancing,
-            status
-        } = await Statement.findOne({owner: req.headers.userid});
+        const statements = await Statement.find({owner: req.user.userId});
 
-        const {
-            directionOrSpecialty,
-            formOfEducation,
-            levelOfEducation
-        } = await Directions.findById(directionOrSpecialtyId);
+        let StArr = [];
+        for (let i = 0; i < statements.length; i++) {
+            const {
+                directionOrSpecialty,
+                formOfEducation,
+                levelOfEducation
+            } = await Directions.findById(statements[i].directionOrSpecialtyId);
+            StArr.push(
+                {
+                    'directionOrSpecialty': directionOrSpecialty,
+                    'sourceOfFinancing': statements[i].sourceOfFinancing,
+                    'formOfEducation': formOfEducation,
+                    'levelOfEducation': levelOfEducation,
+                    'status': statements[i].status
+                }
+            );
+        }
 
-        res.json({
-            directionOrSpecialty,
-            sourceOfFinancing,
-            formOfEducation,
-            levelOfEducation,
-            status
-        });
+        res.json(StArr);
     } catch (e) {
         res.status(500).json({message: 'Что-то пошло не так, попробуйте снова'});
         console.log(e);
     }
+
 };
 
 

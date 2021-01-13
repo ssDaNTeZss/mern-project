@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth.middleware');
 
 // Load Controllers
 // Загружаем контроллеры
@@ -18,9 +19,11 @@ const {
 
 
 router.post('/create',
+    auth,
     creatingStatementController);
 
 router.get('/getAll',
+    auth,
     getAllController);
 
 module.exports = router;

@@ -64,7 +64,6 @@ export const RegPage = () => {
                 }}
                 validateOnBlur
                 onSubmit={values => {
-                    console.log(values);
                     registrationHandler(values);
                 }}
                 validationSchema={validationsSchema}

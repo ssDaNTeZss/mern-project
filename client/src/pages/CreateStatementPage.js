@@ -14,10 +14,6 @@ const LEVELOFEDUCATION = require('../dataForSelect/levelOfEducation');
 const FORMOFEDUCATION = require('../dataForSelect/formOfEducation');
 const LISTOFEXAMS = require('../dataForSelect/listOfExams');
 
-const sourceOfFinancingArr = [
-    {value: 'budget', label: 'Бюджет'}
-];
-
 const competitionArr = [
     {value: 'generalCompetition', label: 'Общий конкурс'},
     {value: 'targetAgreement', label: 'Целевой договор'},
@@ -29,7 +25,6 @@ export const CreateStatementPage = () => {
     const history = useHistory();
     const message = useMessage();
     const auth = useContext(AuthContext);
-    const {userId} = useContext(AuthContext);
     const {loading, error, request, clearError} = useHttp();
 
     const [data, setData] = useState([]);
@@ -51,6 +46,11 @@ export const CreateStatementPage = () => {
     };
 
     useEffect(() => {
+        message(error);
+        clearError();
+    }, [error, message, clearError]);
+
+    useEffect(() => {
         let elems = document.querySelectorAll('.collapsible', 'select');
         let instances = M.Collapsible.init(elems, {});
 
@@ -64,7 +64,6 @@ export const CreateStatementPage = () => {
                 '/api/directions/data/getAll',
                 'GET'
             );
-            console.log(directions);
             setData(directions);
         } catch (e) {
         }
@@ -176,7 +175,6 @@ export const CreateStatementPage = () => {
             ach.push({value: e.target.value});
             setAchieve(ach);
         }
-        console.log(ach);
     };
 
     let achievementsList = ACHIEVEMENTS.length > 0
@@ -218,8 +216,6 @@ export const CreateStatementPage = () => {
 
     const setLevelOfEducation = (e) => {
         setLOE(e.target.value);
-        console.log(e.target.value);
-        console.log(LOE);
     };
 
     let levelOfEducationList = LEVELOFEDUCATION.length > 0
@@ -231,8 +227,6 @@ export const CreateStatementPage = () => {
 
     const setFormOfEducation = (e) => {
         setFOE(e.target.value);
-        console.log(e.target.value);
-        console.log(FOE);
         setArr([]);
         let arr = Arr;
 
@@ -242,7 +236,6 @@ export const CreateStatementPage = () => {
                 setArr(arr);
             }
         }
-        console.log(Arr);
     };
 
     let formOfEducationList = FORMOFEDUCATION.length > 0
@@ -254,7 +247,6 @@ export const CreateStatementPage = () => {
 
     const setDirectionOrSpecialty = (e) => {
         setDOS({id: e.target.value});
-        console.log(e.target.value);
         setSOF([]);
         let arr2 = new Array();
         setExam1([]);
@@ -303,7 +295,6 @@ export const CreateStatementPage = () => {
         }, this);
 
     const setCompetition = (e) => {
-        console.log('LLL');
         setComp(e.target.value);
     };
 
@@ -341,7 +332,7 @@ export const CreateStatementPage = () => {
                 'POST',
                 values,
                 {
-                    userId
+                    Authorization: `Bearer ${auth.token}`
                 }
             );
             message(data.message);
@@ -388,9 +379,8 @@ export const CreateStatementPage = () => {
                         minScore3: Exam3.minScore,
                         typeExam3: ''
                     }}
-                            // validationSchema={validationsSchema}
+                            validationSchema={validationsSchema}
                             onSubmit={values => {
-                                console.log(values);
                                 saveHandler(values);
                             }}
                             enableReinitialize={true}

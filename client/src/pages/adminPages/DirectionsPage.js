@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useState} from 'react';
 import {AdminNavbar} from "../../components/AdminNavbar";
 import {NavLink, useHistory} from 'react-router-dom'
 import {AuthContext} from "../../context/AuthContext";
-import {Formik} from "formik";
 import M from "materialize-css";
 
 export const DirectionsPage = () => {

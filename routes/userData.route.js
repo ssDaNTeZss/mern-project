@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth.middleware');
 
 // Load Controllers
 // Загружаем контроллеры
@@ -16,8 +17,8 @@ const {
     validLogin
 } = require('../helpers/valid');
 
-router.get('/data', uploadingPersonalDataController);
-router.put('/data/update', updatingPersonalDataController);
+router.get('/data', auth, uploadingPersonalDataController);
+router.put('/data/update', auth, updatingPersonalDataController);
 router.post('/data/loading', loadingFilesController);
 
 module.exports = router;

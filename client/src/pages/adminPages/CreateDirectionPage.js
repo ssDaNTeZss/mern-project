@@ -23,7 +23,6 @@ export const CreateDirectionsPage = () => {
     const [FOE, setFOE] = useState();
     const [budget, setBudget] = useState(false);
     const [offBudget, setOffBudget] = useState(false);
-    const [SOF, setSOF] = useState([]);
     const [DOS, setDOS] = useState();
     const [aB, setaB] = useState();
     const [aOB, setaOB] = useState();
@@ -213,7 +212,6 @@ export const CreateDirectionsPage = () => {
                             validationSchema={validationsSchema}
                             onSubmit={values => {
                                 console.log(values);
-                                // saveHandler(values);
                             }}
                             enableReinitialize={true}
                     >

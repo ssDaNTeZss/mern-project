@@ -17,7 +17,6 @@ export const useAuth = () => {
                 '/api/auth/role',
                 'POST',
                 {id: userId});
-            console.log(firstName);
             login(token, userId, firstName, getData.role);
         } catch (e) {}
     };

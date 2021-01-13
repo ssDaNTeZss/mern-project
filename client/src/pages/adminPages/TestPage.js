@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {AdminNavbar} from "../../components/AdminNavbar";
-import {NavLink, useHistory} from 'react-router-dom'
+import {useHistory} from 'react-router-dom'
 import {AuthContext} from "../../context/AuthContext";
 import {FieldArray, Formik} from "formik";
 import M from "materialize-css";
@@ -55,9 +55,7 @@ export const TestPage = () => {
     const onSubmit = async e => {
         e.preventDefault();
         const formData = new FormData();
-        console.log(file);
         formData.append('file', file);
-        console.log(formData.getAll('file'));
         try {
             const data = await request(
                 '/api/upload/account-photo',
@@ -120,7 +118,6 @@ export const TestPage = () => {
                     }}
                             validationSchema={validationsSchema}
                             onSubmit={values => {
-                                console.log(values);
                             }}
                             enableReinitialize={true}
                     >

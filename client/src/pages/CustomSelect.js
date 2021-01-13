@@ -1,6 +1,5 @@
 import React from 'react';
 import Select from 'react-select'
-import {Formik} from "formik";
 
 export default ({onChange, options, value, className}) => {
 

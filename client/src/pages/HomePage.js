@@ -12,7 +12,7 @@ export const HomePage = () => {
     const message = useMessage();
     const {loading, error, request, clearError} = useHttp();
     const auth = useContext(AuthContext);
-    const {userId} = useContext(AuthContext);
+    const {token} = useContext(AuthContext);
     const [data, setData] = useState([]);
 
     const logoutHandler = event => {
@@ -20,6 +20,11 @@ export const HomePage = () => {
         auth.logout();
         history.push('/');
     };
+
+    useEffect(() => {
+        message(error);
+        clearError();
+    }, [error, message, clearError]);
 
     useEffect(() => {
         let elems = document.querySelectorAll('.collapsible', 'select');
@@ -34,13 +39,13 @@ export const HomePage = () => {
             const fetched = await request(`/api/statement/getAll`,
                 'GET', null,
                 {
-                    userId
+                    Authorization: `Bearer ${token}`
                 }
             );
             setData(fetched);
         } catch (e) {
         }
-    }, [userId, request]);
+    }, [token, request]);
 
     useEffect(() => {
         getData();
@@ -80,7 +85,7 @@ export const HomePage = () => {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <TableSt arr={data} />
+                                      <TableSt arr={data} />
                                         </tbody>
                                     </table>
                                     <NavLink to="/create-statement" className="btn red navLinkBtn">
